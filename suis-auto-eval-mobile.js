@@ -254,7 +254,8 @@
     var LOG = 'display:block!important;position:static!important;margin:9px 0 0 0!important;padding:0!important;' +
       'font:400 12.5px/1.45 NotoSansKR,Malgun Gothic,sans-serif!important;color:#cbd5e1!important;' +
       'min-height:40px!important;' + 
-      'max-height:130px!important;overflow:auto!important;white-space:pre-wrap!important;';
+      'max-height:130px!important;overflow:auto!important;white-space:pre-wrap!important;'; +
+      'background:#111827!important;border-radius:8px!important;';
 
     box.innerHTML =
       '<div style="' + HEAD + '">' +
