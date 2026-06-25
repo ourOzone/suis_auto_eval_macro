@@ -231,12 +231,12 @@
     var box = document.createElement('div');
     box.id = 'suisAutoEvalPanel';
     box.style.cssText =
-      'all:initial!important;position:fixed!important;right:10px!important;bottom:10px!important;' +
-      'left:auto!important;top:auto!important;z-index:2147483647!important;display:block!important;' +
-      'box-sizing:border-box!important;width:min(320px,calc(100vw - 20px))!important;' +
-      'max-height:calc(100vh - 20px)!important;' +
-      'overflow-y:auto!important;' +
-      'padding:12px!important;margin:0!important;background:#1f2937!important;color:#fff!important;' +
+      'all:initial!important;position:fixed!important;right:10px!important;' +
+      'top:50%!important;bottom:auto!important;left:auto!important;' +
+      'transform:translateY(-50%)!important;' +
+      'z-index:2147483647!important;display:block!important;' +
+      'box-sizing:border-box!important;width:min(360px,calc(100vw - 20px))!important;' +
+      'padding:16px!important;margin:0!important;background:#1f2937!important;color:#fff!important;' +
       'border-radius:14px!important;box-shadow:0 8px 28px rgba(0,0,0,.55)!important;' +
       'font:400 14px/1.45 NotoSansKR,Malgun Gothic,sans-serif!important;';
 
