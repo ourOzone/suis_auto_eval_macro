@@ -273,35 +273,39 @@
     document.body.appendChild(box);
 
     // 접기/닫기
-    var bodyEl = box.querySelector('#seBody');
-    box.querySelector('#seMin').onclick = function () {
-      bodyEl.style.setProperty('display', bodyEl.style.display === 'none' ? 'block' : 'none', 'important');
-    };
-    box.querySelector('#seX').onclick = function () { box.remove(); };
+var bodyEl = box.querySelector('#seBody');
+var logEl = box.querySelector('#seLog');
+function log(m) { logEl.textContent = (m + '\n' + logEl.textContent).slice(0, 1500); }
 
-    var logEl = box.querySelector('#seLog');
-    function log(m) { logEl.textContent = (m + '\n' + logEl.textContent).slice(0, 1500); }
+function bindBtn(id, fn) {
+  var el = box.querySelector(id);
+  el.addEventListener('touchend', function(e) { e.preventDefault(); fn(); }, { passive: false });
+  el.addEventListener('click', fn);
+}
 
-    box.querySelector('#seScan').onclick = function () {
-      log('미평가 과목: ' + unevalRows().length + '개');
-    };
-    box.querySelector('#seDry').onclick = function () {
-      if (askMent() === null) return;
-      var r = fillCurrent();
-      log('테스트 → 라디오 ' + r.radios + '/' + r.groups + ', 주관식 ' + r.texts + (r.ok ? ' (검증 OK)' : ' (검증 실패!)'));
-    };
-    box.querySelector('#seSafe').onclick = function () {
-      if (!confirm('⚠ 저장하면 수정이 절대 불가합니다.\n②테스트로 값이 잘 들어가는지 먼저 확인했나요?\n\n계속하면 과목마다 저장 전 확인창이 뜹니다.')) return;
-      if (askMent() === null) return;
-      runAll(true, log);
-    };
-    box.querySelector('#seAuto').onclick = function () {
-      if (!confirm('⚠⚠ 확인 없이 모든 미평가 과목을 자동 저장합니다.\n저장 후 수정 절대 불가. 진행할까요?')) return;
-      if (askMent() === null) return;
-      if (!confirm('모두 보통 + 입력한 멘트로 영구 저장됩니다.\n멘트: ' + MENT + '\n진행?')) return;
-      runAll(false, log);
-    };
-  }
+bindBtn('#seMin', function() {
+  bodyEl.style.setProperty('display', bodyEl.style.display === 'none' ? 'block' : 'none', 'important');
+});
+bindBtn('#seX', function() { box.remove(); });
+bindBtn('#seScan', function() {
+  log('미평가 과목: ' + unevalRows().length + '개');
+});
+bindBtn('#seDry', function() {
+  if (askMent() === null) return;
+  var r = fillCurrent();
+  log('테스트 → 라디오 ' + r.radios + '/' + r.groups + ', 주관식 ' + r.texts + (r.ok ? ' (검증 OK)' : ' (검증 실패!)'));
+});
+bindBtn('#seSafe', function() {
+  if (!confirm('⚠ 저장하면 수정이 절대 불가합니다.\n②테스트로 값이 잘 들어가는지 먼저 확인했나요?\n\n계속하면 과목마다 저장 전 확인창이 뜹니다.')) return;
+  if (askMent() === null) return;
+  runAll(true, log);
+});
+bindBtn('#seAuto', function() {
+  if (!confirm('⚠⚠ 확인 없이 모든 미평가 과목을 자동 저장합니다.\n저장 후 수정 절대 불가. 진행할까요?')) return;
+  if (askMent() === null) return;
+  if (!confirm('모두 보통 + 입력한 멘트로 영구 저장됩니다.\n멘트: ' + MENT + '\n진행?')) return;
+  runAll(false, log);
+});
 
   makePanel();
   setInterval(makePanel, 2000);
