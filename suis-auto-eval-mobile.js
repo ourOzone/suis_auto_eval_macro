@@ -253,6 +253,7 @@
       'font:700 18px/1 NotoSansKR,sans-serif!important;-webkit-appearance:none!important;';
     var LOG = 'display:block!important;position:static!important;margin:9px 0 0 0!important;padding:0!important;' +
       'font:400 12.5px/1.45 NotoSansKR,Malgun Gothic,sans-serif!important;color:#cbd5e1!important;' +
+      'min-height:40px!important;' + 
       'max-height:130px!important;overflow:auto!important;white-space:pre-wrap!important;';
 
     box.innerHTML =
