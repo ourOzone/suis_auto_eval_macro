@@ -6,7 +6,7 @@
     var v = MENT;
     while (true) {
       v = prompt('주관식에 넣을 멘트를 입력하세요 (10글자 이상).', v || '');
-      if (v === null) return null;            // 취소
+      if (v === null) return null;
       v = v.trim();
       if (v.length >= 10) { MENT = v; return v; }
       alert('10글자 이상 입력해야 합니다. (현재 ' + v.length + '글자)');
@@ -105,7 +105,6 @@
     });
     return count;
   }
-  // 주관식이 모두 채워졌는지(값 존재) 검증
   function textsAllFilled() {
     var ok = true;
     collectDocs().forEach(function (d) {
@@ -115,10 +114,8 @@
         if (!(tas[i].value && tas[i].value.length)) ok = false;
       }
     });
-    return ok; // 주관식이 없으면 true
+    return ok;
   }
-
-  // 현재 화면 과목 1개 채우기 → 검증 결과 반환
   function fillCurrent() {
     var groups = radioGroupCount();
     var r = fillRadios('보통');
@@ -156,7 +153,6 @@
     clickEl(btn);
     return true;
   }
-  // 저장 확인/완료 팝업의 긍정 버튼(예/확인/저장/Yes) 클릭 시도
   async function handlePopups(ms) {
     ms = ms || 4000;
     var start = Date.now(), clicked = 0;
@@ -166,7 +162,7 @@
         var btns = d.querySelectorAll('.Button, .ButtonControl, [class*="Button"]');
         for (var i = 0; i < btns.length; i++) {
           var b = btns[i];
-          if (b.offsetParent === null) continue; // 보이는 것만
+          if (b.offsetParent === null) continue;
           var inPopup = b.closest && (b.closest('[id*="PopupFrame"]') || b.closest('[id*="opup"]'));
           if (!inPopup) continue;
           var txt = (b.textContent || '').replace(/\s+/g, '');
@@ -191,10 +187,10 @@
       if (rows.length === 0) break;
       var row = rows[0];
 
-      clickEl(row); // 과목 행 선택 → 폼 로드
+      clickEl(row);
       await sleep(400);
       var loaded = await waitFor(function () { return radioGroupCount() > 0; }, 8000, 200);
-      await sleep(500); // 데이터 바인딩 여유
+      await sleep(500);
       if (!loaded) { log('[중단] 과목 폼이 로드되지 않음'); return; }
 
       var res = fillCurrent();
@@ -240,21 +236,28 @@
       'border-radius:14px!important;box-shadow:0 8px 28px rgba(0,0,0,.55)!important;' +
       'font:400 14px/1.45 NotoSansKR,Malgun Gothic,sans-serif!important;';
 
-    var BTN = 'display:block!important;position:static!important;float:none!important;box-sizing:border-box!important;' +
+    var BTN =
+      'display:block!important;position:static!important;float:none!important;box-sizing:border-box!important;' +
       'width:100%!important;height:auto!important;min-height:48px!important;margin:0 0 8px 0!important;padding:13px!important;' +
       'border:0!important;border-radius:10px!important;cursor:pointer!important;text-align:center!important;' +
       'pointer-events:auto!important;' +
       '-webkit-appearance:none!important;font:600 15px/1.3 NotoSansKR,Malgun Gothic,sans-serif!important;';
-    var HEAD = 'display:flex!important;position:static!important;align-items:center!important;gap:8px!important;margin:0 0 10px 0!important;';
-    var SMALLBTN = 'display:inline-block!important;position:static!important;box-sizing:border-box!important;' +
+
+    var HEAD =
+      'display:flex!important;position:static!important;align-items:center!important;' +
+      'gap:8px!important;margin:0 0 10px 0!important;';
+
+    var SMALLBTN =
+      'display:inline-block!important;position:static!important;box-sizing:border-box!important;' +
       'width:34px!important;height:34px!important;min-height:34px!important;padding:0!important;margin:0!important;' +
-      'border:0!important;border-radius:8px!important;cursor:pointer!important;background:#374151!important;color:#fff!important;' +
-      'pointer-events:auto!important;' +
+      'border:0!important;border-radius:8px!important;cursor:pointer!important;' +
+      'background:#374151!important;color:#fff!important;pointer-events:auto!important;' +
       'font:700 18px/1 NotoSansKR,sans-serif!important;-webkit-appearance:none!important;';
-    var LOG = 'display:block!important;position:static!important;margin:9px 0 0 0!important;padding:0!important;' +
+
+    var LOG =
+      'display:block!important;position:static!important;margin:9px 0 0 0!important;padding:8px!important;' +
       'font:400 12.5px/1.45 NotoSansKR,Malgun Gothic,sans-serif!important;color:#cbd5e1!important;' +
-      'min-height:40px!important;' + 
-      'max-height:130px!important;overflow:auto!important;white-space:pre-wrap!important;'; +
+      'min-height:40px!important;max-height:160px!important;overflow:auto!important;white-space:pre-wrap!important;' +
       'background:#111827!important;border-radius:8px!important;';
 
     box.innerHTML =
@@ -270,42 +273,44 @@
         '<button id="seAuto" style="' + BTN + 'background:#ef4444!important;color:#fff!important;margin-bottom:0!important;">④ 전체 자동 (확인없이 저장)</button>' +
         '<div id="seLog" style="' + LOG + '"></div>' +
       '</div>';
+
     document.body.appendChild(box);
 
-    // 접기/닫기
-var bodyEl = box.querySelector('#seBody');
-var logEl = box.querySelector('#seLog');
-function log(m) { logEl.textContent = (m + '\n' + logEl.textContent).slice(0, 1500); }
+    var bodyEl = box.querySelector('#seBody');
+    var logEl  = box.querySelector('#seLog');
 
-function bindBtn(id, fn) {
-  var el = box.querySelector(id);
-  el.addEventListener('touchend', function(e) { e.preventDefault(); fn(); }, { passive: false });
-  el.addEventListener('click', fn);
-}
+    function log(m) { logEl.textContent = (m + '\n' + logEl.textContent).slice(0, 1500); }
 
-bindBtn('#seMin', function() {
-  bodyEl.style.setProperty('display', bodyEl.style.display === 'none' ? 'block' : 'none', 'important');
-});
-bindBtn('#seX', function() { box.remove(); });
-bindBtn('#seScan', function() {
-  log('미평가 과목: ' + unevalRows().length + '개');
-});
-bindBtn('#seDry', function() {
-  if (askMent() === null) return;
-  var r = fillCurrent();
-  log('테스트 → 라디오 ' + r.radios + '/' + r.groups + ', 주관식 ' + r.texts + (r.ok ? ' (검증 OK)' : ' (검증 실패!)'));
-});
-bindBtn('#seSafe', function() {
-  if (!confirm('⚠ 저장하면 수정이 절대 불가합니다.\n②테스트로 값이 잘 들어가는지 먼저 확인했나요?\n\n계속하면 과목마다 저장 전 확인창이 뜹니다.')) return;
-  if (askMent() === null) return;
-  runAll(true, log);
-});
-bindBtn('#seAuto', function() {
-  if (!confirm('⚠⚠ 확인 없이 모든 미평가 과목을 자동 저장합니다.\n저장 후 수정 절대 불가. 진행할까요?')) return;
-  if (askMent() === null) return;
-  if (!confirm('모두 보통 + 입력한 멘트로 영구 저장됩니다.\n멘트: ' + MENT + '\n진행?')) return;
-  runAll(false, log);
-});
+    function bindBtn(id, fn) {
+      var el = box.querySelector(id);
+      el.addEventListener('touchend', function (e) { e.preventDefault(); fn(); }, { passive: false });
+      el.addEventListener('click', fn);
+    }
+
+    bindBtn('#seMin', function () {
+      bodyEl.style.setProperty('display', bodyEl.style.display === 'none' ? 'block' : 'none', 'important');
+    });
+    bindBtn('#seX', function () { box.remove(); });
+    bindBtn('#seScan', function () {
+      log('미평가 과목: ' + unevalRows().length + '개');
+    });
+    bindBtn('#seDry', function () {
+      if (askMent() === null) return;
+      var r = fillCurrent();
+      log('테스트 → 라디오 ' + r.radios + '/' + r.groups + ', 주관식 ' + r.texts + (r.ok ? ' (검증 OK)' : ' (검증 실패!)'));
+    });
+    bindBtn('#seSafe', function () {
+      if (!confirm('⚠ 저장하면 수정이 절대 불가합니다.\n②테스트로 값이 잘 들어가는지 먼저 확인했나요?\n\n계속하면 과목마다 저장 전 확인창이 뜹니다.')) return;
+      if (askMent() === null) return;
+      runAll(true, log);
+    });
+    bindBtn('#seAuto', function () {
+      if (!confirm('⚠⚠ 확인 없이 모든 미평가 과목을 자동 저장합니다.\n저장 후 수정 절대 불가. 진행할까요?')) return;
+      if (askMent() === null) return;
+      if (!confirm('모두 보통 + 입력한 멘트로 영구 저장됩니다.\n멘트: ' + MENT + '\n진행?')) return;
+      runAll(false, log);
+    });
+  }
 
   makePanel();
   setInterval(makePanel, 2000);
